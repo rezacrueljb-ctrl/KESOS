@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff7900">
+<title>KESOS - Dompet Digital</title>
+
+<style>
+:root {
+  --orange: #ff7900;
+  --orange-dark: #ed6500;
+  --soft: #fff3e8;
+  --bg: #f6f7f9;
+  --text: #242424;
+  --muted: #858585;
+  --white: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.app {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: auto;
+  background: var(--bg);
+  padding-bottom: 90px;
+}
+.header {
+  background: var(--orange);
+  padding: 22px 20px 80px;
+  color: white;
+  border-radius: 0 0 28px 28px;
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: white;
+  color: var(--orange);
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+  font-weight: 900;
+}
+.icon-button {
+  background: rgba(255,255,255,.2);
+  border: 0;
+  border-radius: 13px;
+  color: white;
+  width: 42px;
+  height: 42px;
+  font-size: 21px;
+}
+.greeting { margin-top: 24px; }
+.greeting small { opacity: .9; }
+.greeting h2 { margin: 5px 0; font-size: 23px; }
+
+.balance-card {
+  background: white;
+  border-radius: 22px;
+  padding: 20px;
+  margin: -59px 16px 0;
+  position: relative;
+  box-shadow: 0 6px 24px #0000000b;
+}
+.balance-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-label { color: var(--muted); font-size: 13px; }
+.eye {
+  border: 0;
+  background: var(--soft);
+  color: var(--orange);
+  border-radius: 10px;
+  padding: 8px;
+}
+.balance {
+  font-size: 29px;
+  font-weight: 800;
+  margin: 12px 0 6px;
+  letter-spacing: -.7px;
+}
+.balance-sub { color: var(--muted); font-size: 12px; }
+.balance-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+.action {
+  border: none;
+  border-radius: 13px;
+  padding: 13px 8px;
+  font-weight: bold;
+}
+.action.primary { background: var(--orange); color: white; }
+.action.secondary { background: var(--soft); color: var(--orange-dark); }
+
+.section { margin: 24px 16px 0; }
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.section-title h3 { margin: 0; font-size: 17px; }
+.section-title small { color: var(--orange); }
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 8px;
+  background: white;
+  padding: 20px 8px;
+  border-radius: 20px;
+}
+.menu-item {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.menu-icon {
+  height: 51px;
+  width: 51px;
+  border-radius: 17px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: var(--soft);
+}
+.menu-item span:last-child {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.promo {
+  background: linear-gradient(110deg, #ff7900, #ff9b35);
+  color: white;
+  padding: 20px;
+  border-radius: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.promo h3 { margin: 0 0 8px; font-size: 17px; }
+.promo p { font-size: 12px; line-height: 1.6; margin: 0; }
+.promo-icon { font-size: 43px; }
+.history-card {
+  background: white;
+  padding: 17px;
+  border-radius: 18px;
+}
+.empty {
+  text-align: center;
+  padding: 24px 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 0;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 13px;
+}
+.transaction:last-child { border-bottom: 0; }
+.transaction small { color: var(--muted); display: block; margin-top: 5px; }
+.amount { text-align: right; font-weight: bold; }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  box-shadow: 0 -4px 20px #00000009;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 11px 4px calc(11px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+.nav-item {
+  border: 0;
+  background: transparent;
+  color: #999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+.nav-item b { font-size: 21px; font-weight: normal; }
+.nav-item.active { color: var(--orange); font-weight: bold; }
+.page { display: none; }
+.page.active { display: block; }
+.subpage { padding: 20px 16px; }
+.back {
+  background: white;
+  border: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+.panel {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+}
+.panel h2 { margin: 0 0 8px; font-size: 21px; }
+.muted { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.field { margin-top: 20px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: white;
+  outline: none;
+}
+.field input:focus, .field select:focus { border-color: var(--orange); }
+.submit {
+  margin-top: 22px;
+  border: none;
+  background: var(--orange);
+  color: white;
+  width: 100%;
+  border-radius: 13px;
+  padding: 15px;
+  font-weight: bold;
+}
+.profile-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: var(--orange);
+  font-size: 22px;
+}
+.profile-row strong { font-size: 14px; }
+.profile-row small { display: block; margin-top: 5px; color: var(--muted); }
+.notice {
+  background: #fff4e9;
+  color: #994600;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 15px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.toast {
+  position: fixed;
+  bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #252525;
+  color: white;
+  padding: 13px 18px;
+  border-radius: 12px;
+  width: max-content;
+  max-width: 90%;
+  font-size: 13px;
+  display: none;
+  z-index: 20;
+}
+@media (max-width:350px) {
+  .menu-icon { width: 43px; height: 43px; }
+  .menu-grid { gap: 18px 4px; }
+  .balance { font-size: 25px; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">K</div>
+        <span>KESOS</span>
+      </div>
+      <button class="icon-button" onclick="showToast('Belum ada notifikasi baru')"
+        aria-label="Notifikasi">♧</button>
+    </div>
+    <div class="greeting">
+      <small>Selamat datang di KESOS 👋</small>
+      <h2>Halo, Sobat KESOS!</h2>
+    </div>
+  </header>
+
+  <!-- BERANDA -->
+  <main id="home" class="page active">
+    <section class="balance-card">
+      <div class="balance-top">
+        <span class="balance-label">Saldo tersedia</span>
+        <button class="eye" onclick="toggleBalance()" id="eyeBtn">◉ Lihat</button>
+      </div>
+      <div class="balance" id="balanceText">Rp 0</div>
+      <div class="balance-sub">Total saldo akun: <strong id="totalText">Rp 0</strong></div>
+
+      <div class="balance-actions">
+        <button class="action primary" onclick="openForm('deposit')">＋ Deposit</button>
+        <button class="action secondary" onclick="openForm('wd')">↗ WD / Tarik</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h3>Menu Utama</h3>
+        <small>KESOS</small>
+      </div>
+      <div class="menu-grid">
+        <button class="menu-item" onclick="openForm('deposit')">
+          <span class="menu-icon">💳</span><span>Deposit</span>
+        </button>
+        <button class="menu-item" onclick="openForm('wd')">
+          <span class="menu-icon">💸</span><span>WD</span>
+        </button>
+        <button class="menu-item" onclick="showToast('Fitur saldo sedang dalam mode demo')">
+          <span class="menu-icon">👛</span><span>Saldo</span>
+        </button>
+        <button class="menu-item" onclick="goPage('history')">
+          <span class="menu-icon">📋</span><span>Riwayat</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><h3>Layanan KESOS</h3></div>
+      <div class="menu-grid">
+        <button class="menu-item" onclick="openService('Isi Pulsa')">
+          <span class="menu-icon">📱</span><span>Isi Pulsa</span>
+        </button>
+        <button class="menu-item" onclick="openService('Paket Internet')">
+          <span class="menu-icon">🌐</span><span>Paket Internet</span>
+        </button>
+        <button class="menu-item" onclick="openService('Blast WhatsApp')">
+          <span class="menu-icon">💬</span><span>Blast WhatsApp</span>
+        </button>
+        <button class="menu-item" onclick="openService('Nokos')">
+          <span class="menu-icon">📞</span><span>Nokos</span>
+        </button>
+        <button class="menu-item" onclick="openService('App Premium')">
+          <span class="menu-icon">⭐</span><span>App Premium</span>
+        </button>
+        <button class="menu-item" onclick="openService('Kebasos')">
+          <span class="menu-icon">🛍️</span><span>Kebasos</span>
+        </button>
+        <button class="menu-item" onclick="goPage('chat')">
+          <span class="menu-icon">🎧</span><span>Chat CS</span>
+        </button>
+        <button class="menu-item" onclick="goPage('account')">
+          <span class="menu-icon">👤</span><span>Akun Saya</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="promo">
+        <div>
+          <h3>✨ Semua dalam satu aplikasi!</h3>
+          <p>Kelola saldo dan temukan berbagai layanan digital di KESOS.</p>
+        </div>
+        <div class="promo-icon">🧡</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h3>Transaksi Terakhir</h3>
+        <button style="border:0;background:none;color:#ff7900"
+          onclick="goPage('history')">Lihat semua</button>
+      </div>
+      <div class="history-card" id="recentTransactions">
+        <div class="empty">📭<br><br>Belum ada transaksi</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RIWAYAT -->
+  <main id="history" class="page subpage">
+    <div class="section-title"><h3>Riwayat Transaksi</h3></div>
+    <div class="history-card" id="allTransactions">
+      <div class="empty">📭<br><br>Belum ada transaksi</div>
+    </div>
+    <div class="notice">
+      Riwayat ini hanya menyimpan permintaan demo selama halaman aktif.
+      Belum terhubung ke server.
+    </div>
+  </main>
+
+  <!-- CHAT CS -->
+  <main id="chat" class="page subpage">
+    <div class="panel">
+      <h2>🎧 Customer Service</h2>
+      <p class="muted">Butuh bantuan menggunakan KESOS? Hubungi tim layanan pelanggan.</p>
+      <div class="field">
+        <label>Pesan kamu</label>
+        <input id="chatMessage" placeholder="Tulis pertanyaan di sini...">
+      </div>
+      <button class="submit" onclick="sendChat()">Kirim Pesan</button>
+      <div class="notice">Chat demo belum terhubung ke petugas CS. Pesan tidak dikirim ke server.</div>
+    </div>
+  </main>
+
+  <!-- AKUN -->
+  <main id="account" class="page subpage">
+    <div class="panel">
+      <h2>Akun Saya</h2>
+      <div class="profile-row">
+        <div class="avatar">👤</div>
+        <div><strong id="profileName">Sobat KESOS</strong>
+          <small>Akun pengguna demo</small></div>
+      </div>
+      <div class="field">
+        <label>Nama pengguna</label>
+        <input id="username" value="Sobat KESOS" maxlength="35">
+      </div>
+      <div class="field">
+        <label>Email (opsional)</label>
+        <input id="email" type="email" placeholder="nama@email.com">
+      </div>
+      <button class="submit" onclick="saveProfile()">Simpan Profil</button>
+      <div class="notice">Prototype ini belum memiliki login, keamanan akun, atau penyimpanan profil permanen.</div>
+    </div>
+  </main>
+
+  <!-- FORM TRANSAKSI -->
+  <main id="transactionPage" class="page subpage">
+    <button class="back" onclick="goPage('home')">← Kembali</button>
+    <div class="panel">
+      <h2 id="formTitle">Deposit</h2>
+      <p class="muted" id="formDesc">Ajukan permintaan deposit saldo KESOS.</p>
+      <div class="field">
+        <label>Nominal (Rp)</label>
+        <input id="amount" type="number" inputmode="numeric"
+          min="1000" step="1000" placeholder="Contoh: 10000">
+      </div>
+      <div class="field" id="methodField">
+        <label>Metode pembayaran</label>
+        <select id="method">
+          <option value="">Pilih metode</option>
+          <option value="Transfer Bank">Transfer Bank</option>
+          <option value="E-Wallet">E-Wallet</option>
+          <option value="QRIS">QRIS</option>
+        </select>
+      </div>
+      <div class="field" id="accountField" style="display:none">
+        <label>Tujuan penarikan</label>
+        <select id="destination">
+          <option value="">Pilih tujuan</option>
+          <option value="Rekening Bank">Rekening Bank</option>
+          <option value="E-Wallet">E-Wallet</option>
+        </select>
+      </div>
+      <button class="submit" onclick="submitTransaction()">Buat Permintaan</button>
+      <div class="notice">
+        Mode demo: permintaan hanya dicatat di halaman ini.
+        Saldo tidak berubah dan tidak ada uang yang dikirim atau diterima.
+      </div>
+    </div>
+  </main>
+
+  <!-- LAYANAN -->
+  <main id="servicePage" class="page subpage">
+    <button class="back" onclick="goPage('home')">← Kembali</button>
+    <div class="panel">
+      <h2 id="serviceTitle">Layanan</h2>
+      <p class="muted" id="serviceDesc">Pilih layanan yang kamu butuhkan.</p>
+      <div class="field">
+        <label id="serviceInputLabel">Detail layanan</label>
+        <input id="serviceInput" placeholder="Masukkan detail layanan">
+      </div>
+      <div class="field">
+        <label>Nominal / harga (Rp)</label>
+        <input id="servicePrice" type="number" min="0"
+          inputmode="numeric" placeholder="Masukkan harga">
+      </div>
+      <button class="submit" onclick="submitService()">Buat Permintaan</button>
+      <div class="notice">
+        Harga dan ketersediaan belum terhubung ke penyedia layanan.
+        Blast WhatsApp harus digunakan hanya untuk penerima yang memberikan izin.
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="home" onclick="goPage('home')">
+      <b>⌂</b><span>Beranda</span>
+    </button>
+    <button class="nav-item" data-page="history" onclick="goPage('history')">
+      <b>▤</b><span>Riwayat</span>
+    </button>
+    <button class="nav-item" data-page="chat" onclick="goPage('chat')">
+      <b>♧</b><span>Chat CS</span>
+    </button>
+    <button class="nav-item" data-page="account" onclick="goPage('account')">
+      <b>♙</b><span>Akun</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script>
+let balance = 0;
+let balanceHidden = false;
+let currentForm = 'deposit';
+let currentService = '';
+let transactions = [];
+
+const money = value =>
+  new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  }).format(value);
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 2600);
+}
+
+function toggleBalance() {
+  balanceHidden = !balanceHidden;
+  document.getElementById('balanceText').textContent =
+    balanceHidden ? '••••••••' : money(balance);
+  document.getElementById('totalText').textContent =
+    balanceHidden ? '••••••••' : money(balance);
+  document.getElementById('eyeBtn').textContent =
+    balanceHidden ? '◉ Tampilkan' : '◉ Sembunyikan';
+}
+
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById(page);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === page);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openForm(type) {
+  currentForm = type;
+  document.getElementById('formTitle').textContent =
+    type === 'deposit' ? '＋ Deposit Saldo' : '↗ Withdraw (WD)';
+  document.getElementById('formDesc').textContent =
+    type === 'deposit'
+      ? 'Ajukan permintaan untuk mengisi saldo KESOS.'
+      : 'Ajukan permintaan penarikan saldo KESOS.';
+  document.getElementById('methodField').style.display =
+    type === 'deposit' ? 'block' : 'none';
+  document.getElementById('accountField').style.display =
+    type === 'wd' ? 'block' : 'none';
+  document.getElementById('amount').value = '';
+  document.getElementById('method').value = '';
+  document.getElementById('destination').value = '';
+  goPage('transactionPage');
+}
+
+function submitTransaction() {
+  const amount = Number(document.getElementById('amount').value);
+  if (!Number.isFinite(amount) || amount < 1000) {
+    showToast('Masukkan nominal minimal Rp1.000');
+    return;
+  }
+
+  let detail = '';
+  if (currentForm === 'deposit') {
+    detail = document.getElementById('method').value;
+    if (!detail) {
+      showToast('Pilih metode pembayaran');
+      return;
+    }
+  } else {
+    detail = document.getElementById('destination').value;
+    if (!detail) {
+      showToast('Pilih tujuan penarikan');
+      return;
+    }
+    if (amount > balance) {
+      showToast('Saldo demo tidak mencukupi');
+      return;
+    }
+  }
+
+  addTransaction({
+    type: currentForm === 'deposit' ? 'Deposit' : 'WD',
+    amount,
+    detail,
+    status: 'Demo'
+  });
+
+  document.getElementById('amount').value = '';
+  goPage('history');
+  showToast('Permintaan demo berhasil dicatat');
+}
+
+function openService(service) {
+  currentService = service;
+  document.getElementById('serviceTitle').textContent = service;
+  document.getElementById('serviceDesc').textContent =
+    'Isi detail untuk membuat permintaan layanan ' + service + '.';
+  document.getElementById('serviceInputLabel').textContent =
+    service === 'Blast WhatsApp' ? 'Detail kampanye dan izin penerima' :
+    service === 'Nokos' ? 'Negara / kebutuhan nomor' :
+    service === 'Kebasos' ? 'Detail kebutuhan' :
+    service === 'App Premium' ? 'Nama aplikasi dan paket' :
+    service === 'Isi Pulsa' ? 'Nomor HP dan operator' :
+    'Nomor HP dan operator';
+  document.getElementById('serviceInput').value = '';
+  document.getElementById('servicePrice').value = '';
+  goPage('servicePage');
+}
+
+function submitService() {
+  const detail = document.getElementById('serviceInput').value.trim();
+  const price = Number(document.getElementById('servicePrice').value || 0);
+
+  if (!detail) {
+    showToast('Isi detail layanan terlebih dahulu');
+    return;
+  }
+  if (price < 0 || !Number.isFinite(price)) {
+    showToast('Harga tidak valid');
+    return;
+  }
+
+  addTransaction({
+    type: currentService,
+    amount: price,
+    detail,
+    status: 'Demo'
+  });
+  goPage('history');
+  showToast('Permintaan demo berhasil dicatat');
+}
+
+function addTransaction(item) {
+  transactions.unshift({
+    ...item,
+    time: new Date().toLocaleString('id-ID')
+  });
+  renderTransactions();
+}
+
+function renderTransactions() {
+  const html = transactions.length
+    ? transactions.map(item => `
+      <div class="transaction">
+        <div>
+          <strong>${escapeHTML(item.type)}</strong>
+          <small>${escapeHTML(item.time)} · ${escapeHTML(item.detail)}</small>
